@@ -1,15 +1,13 @@
 import React, { Component } from "react";
+import MainPage from "./page/MainPage.jsx";
 
 import './App.css';
 
-class App extends Component {
-    render() {
-        return (
-            <div>
-                <h1>My React App!</h1>
-            </div>
-        );
-    }
+function App () {
+
+    return (
+        <MainPage />
+    );
 }
 
 export default App;
