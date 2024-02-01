@@ -1,8 +1,9 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const HtmlWebpackInlineSVGPlugin = require("html-webpack-inline-svg-plugin");
 
 module.exports = {
-    entry: "./src/index",
+    entry: "./src/index.tsx",
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: "index-bundle.js"
@@ -18,14 +19,26 @@ module.exports = {
                 use: ["babel-loader"]
             },
             {
-                test: /\.css$/,
-                use: ["style-loader", "css-loader"]
-            }
+                test: /\.(ts|tsx)$/,
+                exclude: /node_modules/,
+                use: ["ts-loader"],
+            },
+            {
+                test: /\.(scss)$/,
+                use: ["style-loader", "css-loader", "sass-loader"],
+            },
+            {
+                test: /\.(jpg|jpeg|png|gif|mp3|svg)$/,
+                use: ["file-loader"],
+            },
         ]
     },
     plugins: [
         new HtmlWebpackPlugin({
             template: "./src/index.html"
-        })
+        }),
+        new HtmlWebpackInlineSVGPlugin({
+            runPreEmit: true,
+        }),
     ],
 };
