@@ -1,6 +1,6 @@
 import React from 'react';
 
-function MainPage(props) {
+function MainPage() {
     return (
         <div>11</div>
     );
