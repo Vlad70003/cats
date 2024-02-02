@@ -1,13 +1,16 @@
-import React, { useState, useEffect, useRef } from "react";
-import type { MouseEventHandler } from "react";
+import React, {useState, useEffect, useRef} from "react";
+import type {MouseEventHandler} from "react";
 import {Option, OptionProps, SelectProps} from "./CatRemoteTypes";
+import classNames from 'classnames';
+import axios from 'axios';
 
-import ArrowDown from "../../assets/arrow-dropdown.svg";
+import ArrowDown from "../../assets/img/chevron-down.svg";
 import "./style.scss"
 
 const OptionEl = (props: OptionProps) => {
     const {
-        option: { id, name },
+        active,
+        option: {id, name},
         onClick
     } = props;
     const optionRef = useRef<HTMLLIElement>(null);
@@ -17,6 +20,11 @@ const OptionEl = (props: OptionProps) => {
     ): MouseEventHandler<HTMLLIElement> => () => {
         onClick(clickedValue);
     };
+
+    const optionClasses = classNames({
+        option: true,
+        'option--active': active?.id === id
+    });
 
     useEffect(() => {
         const option = optionRef.current;
@@ -35,14 +43,13 @@ const OptionEl = (props: OptionProps) => {
 
     return (
         <li
-            className="option"
+            className={optionClasses}
             value={id}
             onClick={handleClick(id)}
             tabIndex={0}
-            data-testid={`select-option-${id}`}
             ref={optionRef}
         >
-            {name}
+            {id}
         </li>
     );
 };
@@ -56,16 +63,21 @@ const Select = (props: SelectProps) => {
         placeholder,
         status = "default",
         onChange,
-        onClose
+        onClose,
+        lazyLoad = false,
+        prepare,
+        changePrepare
     } = props;
+
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    const [options, setOptions] = useState<Option[]>([])
+    const [options, setOptions] = useState<Option[]>([]);
+    // const [prepare, setPrepare] = useState<boolean>(false);
     const rootRef = useRef<HTMLDivElement>(null);
     const placeholderRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const handleClick = (event: MouseEvent) => {
-            const { target } = event;
+            const {target} = event;
             if (target instanceof Node && !rootRef.current?.contains(target)) {
                 isOpen && onClose?.();
                 setIsOpen(false);
@@ -79,9 +91,36 @@ const Select = (props: SelectProps) => {
         };
     }, [onClose]);
 
+    const handleOptionClick = (value: Option) => {
+        setIsOpen(false);
+        onChange?.(value);
+    };
+
+    const getOptions = async ({open}: { open: boolean }) => {
+        if (url && !options.length) {
+            changePrepare(true);
+            try {
+                const response = (await axios.get(url)).data;
+                if (response.data?.length) {
+                    !open && handleOptionClick(response.data?.[0])
+                }
+                setOptions(() => response.data)
+            } catch (e) {
+
+            }
+
+            changePrepare(false);
+        }
+        open && setIsOpen((prev) => !prev);
+    };
+
     useEffect(() => {
         const placeholderEl = placeholderRef.current;
         if (!placeholderEl) return;
+
+        if (!lazyLoad) {
+            getOptions({open: false});
+        }
 
         const handleEnterKeyDown = (event: KeyboardEvent) => {
             if (event.key === "Enter") {
@@ -95,48 +134,46 @@ const Select = (props: SelectProps) => {
         };
     }, []);
 
-    const handleOptionClick = (value: Option["id"]) => {
-        setIsOpen(false);
-        onChange?.(value);
-    };
-    const handlePlaceHolderClick: MouseEventHandler<HTMLDivElement> = async () => {
-        if (url && !options.length) {
-            await fetch(url).then(res => res.json()).then(data => {
-                setOptions(() => data.data)
-            });
-        }
+    const selectWrapperClass = classNames({
+        selectWrapper: true,
+    });
 
-        setIsOpen((prev) => !prev);
-    };
+    const inputClass = classNames({
+        base: true,
+    })
 
     return (
         <div
-            className="selectWrapper"
+            className={selectWrapperClass}
             ref={rootRef}
             data-is-active={isOpen}
             data-mode={mode}
-            data-testid="selectWrapper"
         >
-            <div className="arrow">
-                <img src={ArrowDown} />
-            </div>
+            <>
+                <img
+                    className="arrow"
+                    src={ArrowDown}
+                    alt="arrow"
+                />
+            </>
             <div
-                className="placeholder"
+                className={inputClass}
                 data-status={status}
-                onClick={handlePlaceHolderClick}
+                onClick={() => getOptions({open: true})}
                 role="button"
                 tabIndex={0}
                 ref={placeholderRef}
             >
-                {value || placeholder}
+                {prepare ? 'Загрузка' : value?.id || placeholder}
             </div>
             {isOpen && (
-                <ul className="select" data-testid="selectDropdown">
+                <ul className="select">
                     {options?.map((option: Option) => (
                         <OptionEl
                             key={option.id}
+                            active={value}
                             option={option}
-                            onClick={handleOptionClick}
+                            onClick={() => handleOptionClick(option)}
                         />
                     ))}
                 </ul>

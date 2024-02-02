@@ -1,0 +1,57 @@
+.mainPage {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.headingWrapper {
+  margin-top: 20px;
+}
+
+.btnWrapper {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.currenciesName {
+  font-size: 96px;
+  color: white;
+  text-align: center;
+  height: 100%;
+}
+
+.headWrapper {
+  display: flex;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.remoteSelectWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+}
+
+.catWrapper {
+  margin-top: 20px;
+}
+
+@media screen and (max-width: 650px) {
+  .catWrapper {
+    display: none;
+  }
+
+  .headWrapper {
+    justify-content: center;
+  }
+
+  .remoteSelectWrapper {
+    align-items: center;
+  }
+
+  .currenciesName {
+    font-size: 64px;
+  }
+}

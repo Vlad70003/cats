@@ -5,6 +5,12 @@
     "jsx": "react",
     "strict": true,
     "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node",
+    "baseUrl": "./",
+    "paths": {
+      "*": ["node_modules/*"]
+    },
+    "experimentalDecorators": false /* or just remove the flag */
   },
   "typeRoots": ["./types"]
 }

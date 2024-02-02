@@ -1,6 +1,41 @@
+//screen
+$tablets: 700px;
+
+@font-face {
+    font-family: 'Kreon';
+    src: url('./assets/font/kreon/Kreon-Light_1.woff') format('woff');
+    font-weight: 300;
+}
+
+@font-face {
+    font-family: 'Kreon';
+    src: url('./assets/font/kreon/Kreon-Regular_1.woff') format('woff');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'Kreon-bold';
+    src: url('./assets/font/kreon/Kreon-SemiBold_1.woff') format('woff');
+    font-weight: 400;
+}
+
+head, body {
+    height: 100vh;
+}
+
+#root {
+    height: 100%;
+}
+
 body {
     margin: 0;
     padding: 0;
+    font-family: Kreon, sans-serif;
+    font-weight: 300;
+}
+
+.fullHeight {
+    height: 100%;
 }
 
 .flex {
@@ -17,4 +52,18 @@ body {
 
 .justify-center {
     justify-content: center;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.kreon-bold-400 {
+    font-family: Kreon-bold, sans-serif;
+    font-weight: 400;
+}
+
+.kreon-400 {
+    font-family: Kreon, sans-serif;
+    font-weight: 400;
 }

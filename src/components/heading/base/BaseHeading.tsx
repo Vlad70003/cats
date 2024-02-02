@@ -1,13 +1,13 @@
 import React from 'react';
-import './BaseHeading.scss';
+import styles from './BaseHeading.module.scss';
 
 function BaseHeading() {
     return (
-        <div className="flex items-center base-heading">
-            <div className="base-heading__title">
+        <div className={`${styles.baseHeading} flex items-center`}>
+            <div className={`${styles.title} kreon-bold-400`}>
                 CAT
             </div>
-            <div className="base-heading__desc">
+            <div className={styles.desc}>
                 currencies<br/> academic<br/> terms
             </div>
         </div>

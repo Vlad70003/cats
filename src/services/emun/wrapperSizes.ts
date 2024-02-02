@@ -1,3 +1,4 @@
 export enum WrapperSizesEnum {
-    base = 1200,
+    base = 600,
+    medium = 550,
 }

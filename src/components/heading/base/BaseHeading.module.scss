@@ -1,0 +1,27 @@
+@mixin TextShadow ($shadow) {
+  text-shadow: $shadow;
+
+}
+
+.baseHeading {
+  gap: 10px;
+}
+
+.title {
+  font-size: 96px;
+  @include TextShadow(0px 4px 4px #00000040);
+}
+
+.desc {
+  font-size: 20px;
+  @include TextShadow(0px 4px 4px #00000040);
+}
+
+@media screen and (max-width: 650px) {
+  .title {
+    @include TextShadow(none);
+  }
+  .desc {
+    @include TextShadow(none);
+  }
+}
